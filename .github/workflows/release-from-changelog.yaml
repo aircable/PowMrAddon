@@ -1,0 +1,33 @@
+name: Release From Changelog
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract release notes for tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          awk -v tag="$TAG" '
+            BEGIN { in_section=0 }
+            $0 ~ "^## " tag "$" { in_section=1; next }
+            $0 ~ "^## " && in_section==1 { exit }
+            in_section==1 { print }
+          ' powmr/CHANGELOG.md > release-notes.txt
+          test -s release-notes.txt
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          body_path: release-notes.txt
+          generate_release_notes: false

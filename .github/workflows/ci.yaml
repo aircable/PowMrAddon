@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint-addon-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate repository.yaml exists
+        run: test -f repository.yaml
+      - name: Validate add-on config exists
+        run: test -f powmr/config.yaml
+      - name: Validate Dockerfile exists
+        run: test -f powmr/Dockerfile
+      - name: Validate run.sh exists
+        run: test -f powmr/run.sh
+
+  python-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile Python sources
+        run: python -m compileall powmr/app
