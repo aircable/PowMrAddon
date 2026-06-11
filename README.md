@@ -1,7 +1,7 @@
 # AIRcable PowMr Add-ons
 
-Home Assistant add-on repository for PowMr inverter telemetry and control via AIRcable MiniP5 TCP bridge.
-
+Home Assistant add-on repository for PowMr inverter telemetry and control via [AIRcable MiniP5 TCP bridge](https://aircable.co/shop/product/acc1310-aircable-minip5-89)).
+ 
 ## Included Add-ons
 
 - `powmr`: Polls a PowMr inverter over TCP and publishes MQTT discovery entities for Home Assistant.
