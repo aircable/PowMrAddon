@@ -18,9 +18,10 @@ jobs:
         run: |
           set -euo pipefail
           TAG="${GITHUB_REF_NAME}"
-          awk -v tag="$TAG" '
+          VERSION="${TAG#v}"
+          awk -v tag="$TAG" -v version="$VERSION" '
             BEGIN { in_section=0 }
-            $0 ~ "^## " tag "$" { in_section=1; next }
+            $0 ~ "^## (\\[)?" tag "(\\])?$" || $0 ~ "^## (\\[)?" version "(\\])?$" { in_section=1; next }
             $0 ~ "^## " && in_section==1 { exit }
             in_section==1 { print }
           ' powmr/CHANGELOG.md > release-notes.txt
